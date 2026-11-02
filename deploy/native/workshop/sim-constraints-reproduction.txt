@@ -1,0 +1,9 @@
+packaging==23.0
+wheel==0.45.1
+numpy==1.26.0
+torch==2.7.0+cu128
+torchvision==0.22.0+cu128
+lxml>=5.2.2
+pyarrow==21.0.0
+pin==2.7.0
+cmeel-boost==1.83.0

@@ -1,0 +1,14 @@
+# These source assets are upstream Git LFS pointer text.
+# deploy/native/workshop/fetch_assets.py downloads and verifies the real files.
+# Do not turn pointers into new Git LFS objects in this repository.
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.exr -text
+*.png -text
+*.blend -text
+*.gif -text
+*.mp4 -text

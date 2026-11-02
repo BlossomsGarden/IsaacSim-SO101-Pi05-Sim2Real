@@ -1,0 +1,75 @@
+{
+  "repo": "aravindhs-NV/grootn16-finetune_sreetz-so101_teleop_vials_rack_left",
+  "revision": "7efab50dfd58cd8f1831035fd86b65410b98c448",
+  "checkpoint": "checkpoint-10000",
+  "excluded_training_files": [
+    "optimizer.pt",
+    "rng_state.pth",
+    "scheduler.pt",
+    "trainer_state.json",
+    "training_args.bin",
+    "wandb_config.json"
+  ],
+  "files": [
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/config.json",
+      "bytes": 1839,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/embodiment_id.json",
+      "bytes": 172,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/experiment_cfg/conf.yaml",
+      "bytes": 4971,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/experiment_cfg/config.yaml",
+      "bytes": 6422,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/experiment_cfg/dataset_statistics.json",
+      "bytes": 20830,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/experiment_cfg/final_model_config.json",
+      "bytes": 1442,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/experiment_cfg/final_processor_config.json",
+      "bytes": 174151,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/model-00001-of-00002.safetensors",
+      "bytes": 4990120184,
+      "lfs_sha256": "7f7a543d3d83f156fa89197ea16916be68f5b6678a2c2bea01d0abc2be816310"
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/model-00002-of-00002.safetensors",
+      "bytes": 4823190320,
+      "lfs_sha256": "156681de9dc1fd840204efe547d1c2a56704c4b99c4679282c2a1765156ce51c"
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/model.safetensors.index.json",
+      "bytes": 121820,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/processor_config.json",
+      "bytes": 11088,
+      "lfs_sha256": null
+    },
+    {
+      "path": "/root/autodl-tmp/workshop/models/groot-so101/checkpoint-10000/statistics.json",
+      "bytes": 283677,
+      "lfs_sha256": null
+    }
+  ]
+}
