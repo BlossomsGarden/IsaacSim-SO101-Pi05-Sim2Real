@@ -116,7 +116,7 @@ less "$REPO/deploy/native/workshop/15_groot_runtime.sh"
 ```
 
 仿真环境安装 IsaacLab 2.3.2 的 `isaaclab` / `isaaclab_assets` / `isaaclab_tasks`、本仓库 `sim_to_real_so101`、LeRobot；安装时保留引擎的 torch/NumPy/packaging，并采用 `lxml>=5.2.2`、`pin==2.7.0`、`cmeel-boost==1.83.0`、`pyarrow==21.0.0`、`h5py`/`termcolor`/`msgpack`。参考 [仿真约束](../deploy/native/workshop/sim-constraints-reproduction.txt)。GR00T 环境依源 `uv.lock` 和实际下载的 `torch==2.7.1+cu128` / `torchvision==0.22.1+cu128` 安装；`flash-attn==2.7.4.post1` 使用与 PyTorch CXX11 ABI=TRUE 匹配的 cp310/cu12/torch2.7 wheel，并实际跑过 CUDA 内核。原安装历经网络续传和依赖解析，单独摘取第 3.3 节脚本不能取代完整的锁定轮子与恢复快照；需要完全照搬版本时走第 1–2 节。
-当时解析出的推理包及哈希另存为[实际推理依赖记录](../evidence/groot-inference-requirements.txt)；这是记录，不能脱离对应 CUDA wheel 和源代码路径直接盲装。
+当时解析出的推理包及哈希已随私有 OBS 环境归档保存；这些记录不能脱离对应 CUDA wheel 和源代码路径直接盲装。
 
 ## 4. 场景测试、策略接口与结果保存
 
@@ -136,9 +136,9 @@ ffprobe -v error -count_frames -select_streams v:0 \
 wc -l /root/autodl-tmp/workshop/results/inference/actions.jsonl
 ```
 
-测试脚本明确检查 `result.json`、录像和回合数，避免引擎退出时吞掉 Python 异常。结果保存在 `/root/autodl-tmp/workshop/results/{smoke,inference}/`：`result.json`、`front-wrist.mp4`、`actions.jsonl`、首帧/中途/回合结尾截图；运行日志写到 `/root/autodl-tmp/workshop/logs/`。此仓库提供 [评测 JSON](../evidence/result.json)、[帧数/动作核对](../evidence/result-summary.json) 和 [完整录像](../media/so101-groot-n16-4090.mp4)。
+测试脚本明确检查 `result.json`、录像和回合数，避免引擎退出时吞掉 Python 异常。结果保存在 `/root/autodl-tmp/workshop/results/{smoke,inference}/`：`result.json`、`front-wrist.mp4`、`actions.jsonl`、首帧/中途/回合结尾截图；运行日志写到 `/root/autodl-tmp/workshop/logs/`。仓库仅保留[压缩后的演示录像](../assets/so101-groot-n16-4090.mp4)，复现后的完整结果请在运行机器上核查。
 
-本次 3 回合步骤数 250/255/243，场景成功条件均满足，共 748 步、46 次 GR00T 请求、请求延迟中位数 187.7 ms。40 步场景烟测、两路 640×480 RGB 相机、Isaac Sim 引擎复测、CUDA BF16 与 FlashAttention kernel 均通过。[脱敏机器状态](../evidence/final-state.json) 与 [FlashAttention 结果](../evidence/groot-core-result.json) 提供具体版本。
+本次 3 回合步骤数 250/255/243，场景成功条件均满足，共 748 步、46 次 GR00T 请求、请求延迟中位数 187.7 ms。40 步场景烟测、两路 640×480 RGB 相机、Isaac Sim 引擎复测、CUDA BF16 与 FlashAttention kernel 均通过；详细机器状态与内核检查结果保存在私有 OBS 环境归档中。
 
 ## 5. 依赖告警和项目边界
 

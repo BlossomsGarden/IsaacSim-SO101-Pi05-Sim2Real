@@ -1,12 +1,8 @@
-# SO-101 × Isaac Sim × GR00T N1.6 仿真环境复现
+# IsaacSim x Pi0.5 x SO101 Sim-to-Real Project
 
-![RTX 4090 上的 SO-101 试管入架仿真录像](media/so101-groot-n16-4090.gif)
 
-**[播放完整双相机仿真录像（MP4，24.9 秒）](media/so101-groot-n16-4090.mp4)** · [原始评测 JSON](evidence/result.json) · [视频帧数与动作核对](evidence/result-summary.json)
+本项目迁移了原 [NVIDIA SO-101 Sim-to-Real Workshop](https://github.com/isaac-sim/Sim-to-Real-SO-101-Workshop) 的代码，在 AutoDL 租用 RTX 4090 云主机跑通 IsaacSim 5.1 与 GR00T N1.6 的原始试管入架任务后，自行构建了面向真机视觉对齐的方块抓取与叠放任务。采用俯视与腕部双摄像头，分辨率 640×480，帧数 30 fps，动作按 30Hz 随相机帧一同记录。分离式请求框架延迟中位数 187.7 ms。
 
-2026-11-01 在 AutoDL RTX 4090 上，以原生 Python 环境运行 Isaac Sim 5.1 + SO-101 场景，经本机 ZeroMQ 调用独立 Python 3.10 环境的 GR00T N1.6 SO-101 微调权重。教程评测任务 3/3 回合达到场景的成功条件（250、255、243 步），合计 748 步、46 次模型请求。双视角视频 1280×480、30 fps、748 帧；请求延迟中位数 187.7 ms。**这验证了仿真推理链路；未做真机、训练或 Pi0.5 验证，也不能由三次试验推断长期成功率。**
-
-> 仓库名称保留 Pi05 以备后续扩展；当前实际运行的 backbone 为 **GR00T N1.6**。此项目基于 [NVIDIA SO-101 Sim-to-Real Workshop](https://github.com/isaac-sim/Sim-to-Real-SO-101-Workshop) 的 Apache-2.0 代码与任务；原版说明在 [docs/UPSTREAM_README.md](docs/UPSTREAM_README.md)，许可证在根目录，第三方声明见 [docs/THIRD_PARTY_NOTICES](docs/THIRD_PARTY_NOTICES)。
 
 ## 运行环境
 
@@ -20,6 +16,34 @@
 | 连接方式 | localhost ZeroMQ `127.0.0.1:5555`，外部视角 → front、腕部视角 → wrist |
 
 详细环境版本、第一次安装过程、下载命令、OBS 恢复方式和依赖边界：[**4090 部署及复现指南**](docs/DEPLOYMENT_4090.md)。
+
+远程看图与本地主臂遥操作的当前实测范围、接入接口和待解决的端口限制：[**4090 实时画面与主臂接入核查**](docs/REMOTE_TELEOP_4090.md)。
+
+本地主臂接上后逐步启动仿真画面、遥操作和 LeRobot episode 录制：[**SO-101 主臂遥操作快速上手**](docs/SO101_REMOTE_TELEOP_QUICKSTART.md)。本地使用 [BlossomsGarden/pick-and-place-v3_20261025_051506](https://huggingface.co/datasets/BlossomsGarden/pick-and-place-v3_20261025_051506/tree/main) 下 `lelab-portable-win64.zip` 自带的虚拟环境；解压到相邻的 `lelab-main` 后，启动脚本实际调用 `../lelab-main/.venv/Scripts/python.exe`，复用其中的 LeRobot、串口库和主臂标定。此前录制的遥操作画面仅展示主臂与仿真画面，并非真机从臂执行结果。
+
+### 白桌抓方块场景（2026-11-15）
+
+| Sim Cam.top | Sim Cam.wrist | Real Cam.top | Real Cam.wrist |
+| :---: | :---: | :---: | :---: |
+| <img src="assets/cubes-white-table-top.png" alt="Isaac Sim 外部视角" width="220"> | <img src="assets/cubes-white-table-wrist.png" alt="Isaac Sim 腕部视角" width="220"> | <img src="assets/real-cam-side.png" alt="真机 side 相机视角" width="220"> | <img src="assets/real-cam-front.png" alt="真机 front 相机视角" width="220"> |
+
+四张图片均为 640×480，表格中按相同比例展示。真机两张图从 `assets/real-demo.png` 裁出，数据集原始相机键依次为 `observation.images.side` 和 `observation.images.front`；表头的 top / wrist 表示对照用途，未声称相机外参或物体布置完全一致。
+
+外部 side 相机高度降至 0.30 m，并略微放宽视野以呈现更多机身侧面；仍关闭景深模糊以提升清晰度；腕部 RGB 观测独立增亮，不改场景照明及原始英伟达任务。
+
+参考本地 `isaaclab-pick-and-place` 数据集首帧的方块相对布局，新增独立场景：扩至 1.21 × 1.00 m 的浅灰白桌板、黑色 SO-101 与两片白色侧面、黑色内外缘的夹指、按真机样本调色的左侧绿色方块和右侧红色方块，以远光留下柔和阴影，没有灯箱围墙。外部相机参考真机 `pick-and-place-v3_20261025_051506` 的 side 视角；保持基座、相机与夹爪开合量，单独把旋转关节从 -0.0456 调到 0.4000 rad，使两片夹指在 side 画面中朝向绿方块；内外黑边只修改 USD 视觉面集，夹指根部和腕部连接件仍保持黑色。此调整用于图像构图，并非已经标定好的三维抓取姿态。4090 上完成 40 步物理与双相机 640×480 截图检查；**尚未用真主臂采集方块回合**。环境 ID、运行方式及结果路径见[白桌抓方块场景说明](docs/CUBES_WHITE_TABLE_4090.md)。
+
+#### 方块初始位置采样预览
+
+![绿色和红色方块候选初始位置及扰动点示意](assets/scene_random_positions_preview_v3.png)
+
+图中标出 40 个绿色候选点、40 个红色候选点和 10 个扰动点，是位置采样的预览。**当前仓库的 `cubes_white_table_env_cfg.py` 仍使用固定初始坐标，尚未将这些随机位置接入场景重置或录制流程**；正式生成随机化训练数据前需要实现并验证重置采样。
+
+### 遥操作录制状态（2026-11-08）
+
+本次真主臂已驱动仿真动作；正式数据集 /root/autodl-tmp/workshop/datasets/so101-remote-vials/ 经核查为 **0 回合、0 帧**，已清除其中只含空元数据及空图片目录的中间文件。一次 16 帧的短录制已按指令丢弃；之后点击“保存本回合”时并未处于录制状态，旧页面却仍返回“已提交”。日志确定“重置场景”进入 env.reset() 后进程退出，启动至退出约五分钟，排除 30 分钟启动超时；底层退出原因尚未定位。
+
+已按相邻 LeLab 的逐回合 save_episode()、保存完 finalize() 的流程修复录制：远端安装的 LeRobot 0.4.3 **不提供** resume()，因此使用适配其实际接口的已完成数据集续写逻辑。隔离目录已实测两次双相机 episode 保存、重开并确认 2 回合／4 帧，测试目录随后自动删除；**未重启 Isaac Sim，真臂场景中的保存仍待下次实际录制验收。** 页面现在会等待命令执行结果；无录制时保存／丢弃返回 409。“重置场景”暂时返回明确的 409，以避免再次把服务关闭；需要实际重置场景时，须先排查 Isaac Sim 的 env.reset() 退出问题。操作步骤及代码验证方式见[遥操作指南](docs/SO101_REMOTE_TELEOP_QUICKSTART.md)。
 
 ## 最短复现路径：恢复已验证环境
 
@@ -59,7 +83,7 @@ bash /root/autodl-tmp/isaac-transfer-tools/workshop/18_so101_eval.sh
 - `deploy/native/engine/`：4090 上实际使用的系统依赖、Isaac Sim 安装、物理和相机测试脚本。
 - `deploy/native/workshop/`：权重、资产、环境安装记录及本次闭环评测脚本。
 - `docs/DEPLOYMENT_4090.md`：完整操作顺序、命令、路径和故障边界。
-- `evidence/` 与 `media/`：不含机器凭据的运行摘要、结果及录像。
+- `assets/`：白桌场景、初始位置采样图、主臂遥操作与 GR00T 仿真演示。
 
 ## 已知范围
 

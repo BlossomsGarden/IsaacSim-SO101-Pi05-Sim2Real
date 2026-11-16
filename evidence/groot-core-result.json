@@ -1,7 +1,0 @@
-{
-  "status": "pass",
-  "torch": "2.7.1+cu128",
-  "flash_attn": "2.7.4.post1",
-  "cxx11_abi": true,
-  "flash_cuda_kernel": true
-}

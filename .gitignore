@@ -271,11 +271,10 @@ docker/env
 /obs-migration/
 /workshop-deployment/
 /CHANGELOG
-/.flake8
-/.dockerignore
-/SECURITY.md
-/THIRD_PARTY_NOTICES
 
-# The verified public demo is deliberately tracked (small, compressed media).
-!media/
-!media/so101-groot-n16-4090.mp4
+# Historical machine evidence and the old media directory are excluded.
+/evidence/
+/media/
+
+# Keep the short public demonstration video alongside its GIF in assets.
+!assets/so101-groot-n16-4090.mp4
